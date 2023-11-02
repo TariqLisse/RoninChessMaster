@@ -250,47 +250,37 @@ class AI:
         return arr
 
 
-    def calculateb(self,gametiles):
-        value=0
-        for x in range(8):
-            for y in range(8):
-                    if gametiles[y][x].pieceonTile.tostring()=='P':
-                        value=value-100
+    def calculateb(self, gametiles): # Evaluation function to calculate value of chess position based on piece and position values combines
+        # Dictionary with values associated with each chess piece
+        piece_values = {
+            'P' : -100, 'N': -350, 'B': -350, 'R': -525, 'Q': -1000, 'K': -10000,
+            'p': 100, 'n': 350, 'b': 350, 'r': 525, 'q': 1000, 'k': 10000
+        }
+        # Dictionary with values associated with each position on the board: The center coordinates are worth more to encourage center control
+        position_values = {
+            'a1': -20, 'b1': 0, 'c1': 5, 'd1': 5, 'e1': 5, 'f1': 0, 'g1': 0, 'h1': -20,
+            'a2': 0, 'b2': 5, 'c2': 10, 'd2': 10, 'e2': 10, 'f2': 5, 'g2': 5, 'h2': 0,
+            'a3': 5, 'b3': 10, 'c3': 20, 'd3': 20, 'e3': 20, 'f3': 10, 'g3': 10, 'h3': 5,
+            'a4': 5, 'b4': 10, 'c4': 20, 'd4': 30, 'e4': 30, 'f4': 20, 'g4': 10, 'h4': 5,
+            'a5': 5, 'b5': 10, 'c5': 20, 'd5': 30, 'e5': 30, 'f5': 20, 'g5': 10, 'h5': 5,
+            'a6': 0, 'b6': 5, 'c6': 10, 'd6': 10, 'e6': 10, 'f6': 5, 'g6': 5, 'h6': 0,
+            'a7': -20, 'b7': 0, 'c7': 5, 'd7': 5, 'e7': 5, 'f7': 0, 'g7': 0, 'h7': -20,
+            'a8': -20, 'b8': 0, 'c8': 5, 'd8': 5, 'e8': 5, 'f8': 0, 'g8': 0, 'h8': -20
+        }
 
-                    if gametiles[y][x].pieceonTile.tostring()=='N':
-                        value=value-350
+        value = 0
 
-                    if gametiles[y][x].pieceonTile.tostring()=='B':
-                        value=value-350
+        for y in range(8):
+            for x in range(8):
+                piece = gametiles[y][x].pieceonTile.tostring() # Retrieves the piece located on current square to look up the piece_value
+                if piece in piece_values:
+                    value += piece_values[piece]
 
-                    if gametiles[y][x].pieceonTile.tostring()=='R':
-                        value=value-525
+                square = chr(ord('a') + x) + str(8 - y) # Converts a numerical coordinate to a string value to see if the square exists
+                if square in position_values:
+                    value += position_values[square]
 
-                    if gametiles[y][x].pieceonTile.tostring()=='Q':
-                        value=value-1000
-
-                    if gametiles[y][x].pieceonTile.tostring()=='K':
-                        value=value-10000
-
-                    if gametiles[y][x].pieceonTile.tostring()=='p':
-                        value=value+100
-
-                    if gametiles[y][x].pieceonTile.tostring()=='n':
-                        value=value+350
-
-                    if gametiles[y][x].pieceonTile.tostring()=='b':
-                        value=value+350
-
-                    if gametiles[y][x].pieceonTile.tostring()=='r':
-                        value=value+525
-
-                    if gametiles[y][x].pieceonTile.tostring()=='q':
-                        value=value+1000
-
-                    if gametiles[y][x].pieceonTile.tostring()=='k':
-                        value=value+10000
-
-        return value
+        return value # Returns a calculate value to represent the evaluation of the chess position based on the assigned values for pieces and positions
 
 
     def move(self,gametiles,y,x,n,m):
